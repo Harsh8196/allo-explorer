@@ -1,5 +1,10 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-icons/font/bootstrap-icons.min.css'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import BootstrapClient from '@/component/BootstrapClient'
+import RecoidContextProvider from "./recoilContextProvider";
+import Base from '@/component/Base';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,7 +16,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className="font-monospace">
+      <RecoidContextProvider>
+      <Base/>
+      {children}
+      </RecoidContextProvider>
+      <BootstrapClient/>
+      </body>
     </html>
   )
 }

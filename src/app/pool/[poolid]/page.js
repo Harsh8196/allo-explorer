@@ -1,15 +1,16 @@
 "use client"
 import moment from "moment"
-import { rpoolPage, rpoolDetailsPool,rnodeId } from "@/component/map/state"
+import { rpoolPage, rpoolDetailsPool, rnodeId } from "@/component/map/state"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { useEffect, useState } from "react"
 import { Loading, LoadingContainer } from "@/component/Loading"
-import AMPie from "@/component/pie/AMPie"
+import dynamic from "next/dynamic"
+// import AMPie from "@/component/pie/AMPie"
 import Poolpagefilter from "@/component/filters/Poolpagefilter"
-import { risLoading,risLoadingContainer,risFilterChanged } from "@/component/chain/state"
+import { risLoading, risLoadingContainer, risFilterChanged } from "@/component/chain/state"
 import Recipientlist from "@/component/tables/Recipients"
 
-function Pool({params}) {
+function PoolDe({ params }) {
 
     const [selectedNode, setSelectedNode] = useRecoilState(rnodeId)
     const [pool, setPool] = useRecoilState(rpoolPage)
@@ -17,72 +18,87 @@ function Pool({params}) {
     const [isLoading, setIsLoading] = useRecoilState(risLoading)
     const [isLoadingContainer, setIsLoadingContainer] = useRecoilState(risLoadingContainer)
     const [isFilterChanged, setIsFilterChanged] = useRecoilState(risFilterChanged)
-    const [name,setName] = useState('')
+    const [name, setName] = useState('')
     const [description, setDescription] = useState('')
-    const [url,setURL] = useState('')
-    const [pageDetails,setPageDetails] = useState({
-        "profileId":'',
-        "allocationStartTime":'',
-        "allocationEndTime":'',
-        "approvalThreshold":0,
-        "maxRequestedAmount":0,
-        "totalPool":0,
-        "totalDistributedAmount":0,
-        "totalApplications":0,
-        "totalAccepted":0,
-        "totalPending":0
+    const [url, setURL] = useState('')
+    const [pageDetails, setPageDetails] = useState({
+        "profileId": '',
+        "allocationStartTime": '',
+        "allocationEndTime": '',
+        "approvalThreshold": 0,
+        "maxRequestedAmount": 0,
+        "totalPool": 0,
+        "totalDistributedAmount": 0,
+        "totalApplications": 0,
+        "totalAccepted": 0,
+        "totalPending": 0
     })
 
-    useEffect(()=>{
-        if(params.poolid !== ""){
+    useEffect(() => {
+        if (params.poolid !== "") {
             setSelectedNode(params.poolid)
         }
 
-    },[])
+    }, [])
 
 
 
     useEffect(() => {
         setPool(poolDetails)
     }, [poolDetails])
-  
-    useEffect(()=>{
-      if(pool.nodes.length > 0){
-        getMetaData()
-        setPageDetails({
-        "profileId":pool.nodes[0].pool.profile.profileId,
-        "allocationStartTime":moment(new Date(pool.nodes[0].allocationStartTime *1000)).format('DD-MM-YYYY HH:mm:ss'),
-        "allocationEndTime":moment(new Date(pool.nodes[0].allocationEndTime *1000)).format('DD-MM-YYYY HH:mm:ss'),
-        "approvalThreshold":pool.nodes[0].approvalThreshold,
-        "maxRequestedAmount":(pool.nodes[0].maxRequestedAmount/10e17) +' '+pool.generalInfo[0].tokenSymbol ,
-        "totalPool":pool.generalInfo[0].totalPool +' '+pool.generalInfo[0].tokenSymbol,
-        "totalDistributedAmount":pool.generalInfo[0].totalDistributedAmount +' '+pool.generalInfo[0].tokenSymbol,
-        "totalApplications":pool.generalInfo[0].totalApplications,
-        "totalAccepted":pool.generalInfo[0].totalAccepted,
-        "totalPending":pool.generalInfo[0].totalPending  
-        })
-        
-      } 
-    },[pool])
 
-    const getMetaData = async() => {
-        try {
-                const response = await fetch(`https://ipfs.io/ipfs/${pool.nodes[0].pool.metadataPointer}`)
-                const result = await response.json()
-                setName(result.name)
-                setDescription(result.description)
-                setURL(result.website)
-                // console.log('result',result)
-                setIsLoadingContainer(true)
-                setIsFilterChanged(false)
-              } catch (error) {
-                setName("")
-                setDescription("")
-                setURL("")
-                setIsLoadingContainer(true)
-                setIsFilterChanged(false)
-              }
-            }
+    useEffect(() => {
+        if (pool.nodes.length > 0) {
+            fetch(`https://ipfs.io/ipfs/${pool.nodes[0].pool.metadataPointer}`)
+                .then((res) => res.json())
+                .then((result) => {
+                    setName(result.name)
+                    setDescription(result.description)
+                    setURL(result.website)
+                    // console.log('result',result)
+                    setIsLoadingContainer(true)
+                    setIsFilterChanged(false)
+                }).catch(() => {
+                    setName("")
+                    setDescription("")
+                    setURL("")
+                    setIsLoadingContainer(true)
+                    setIsFilterChanged(false)
+                })
+            setPageDetails({
+                "profileId": pool.nodes[0].pool.profile.profileId,
+                "allocationStartTime": moment(new Date(pool.nodes[0].allocationStartTime * 1000)).format('DD-MM-YYYY HH:mm:ss'),
+                "allocationEndTime": moment(new Date(pool.nodes[0].allocationEndTime * 1000)).format('DD-MM-YYYY HH:mm:ss'),
+                "approvalThreshold": pool.nodes[0].approvalThreshold,
+                "maxRequestedAmount": (pool.nodes[0].maxRequestedAmount / 10e17) + ' ' + pool.generalInfo[0].tokenSymbol,
+                "totalPool": pool.generalInfo[0].totalPool + ' ' + pool.generalInfo[0].tokenSymbol,
+                "totalDistributedAmount": pool.generalInfo[0].totalDistributedAmount + ' ' + pool.generalInfo[0].tokenSymbol,
+                "totalApplications": pool.generalInfo[0].totalApplications,
+                "totalAccepted": pool.generalInfo[0].totalAccepted,
+                "totalPending": pool.generalInfo[0].totalPending
+            })
+
+        }
+    }, [pool])
+
+    // const getMetaData = async () => {
+    //     try {
+    //         const response = await fetch(`https://ipfs.io/ipfs/${pool.nodes[0].pool.metadataPointer}`)
+    //         const result = await response.json()
+    //         setName(result.name)
+    //         setDescription(result.description)
+    //         setURL(result.website)
+    //         // console.log('result',result)
+    //         setIsLoadingContainer(true)
+    //         setIsFilterChanged(false)
+    //     } catch (error) {
+    //         setName("")
+    //         setDescription("")
+    //         setURL("")
+    //         setIsLoadingContainer(true)
+    //         setIsFilterChanged(false)
+    //     }
+    // }
 
     const data = [
         {
@@ -98,6 +114,9 @@ function Pool({params}) {
             "color": "hsl(5, 70%, 50%)"
         }
     ]
+
+    const AMPieDynamic = dynamic(() => import("../../../component/pie/AMPie"), { ssr: false })
+
 
     return (
         <div>
@@ -165,7 +184,7 @@ function Pool({params}) {
                             </div>
                             <div className="card shadow p-60vh mt-4 me-1">
                                 <div className="card-body overflow-y-auto">
-                                <p className="text-start mt-2 text-secondary fw-medium text-wrap p-font-size">{description} </p>
+                                    <p className="text-start mt-2 text-secondary fw-medium text-wrap p-font-size">{description} </p>
                                 </div>
                             </div>
                         </div>
@@ -211,7 +230,7 @@ function Pool({params}) {
                                         <div className="text-secondary fw-bolder">Application Status (Total: {pageDetails.totalApplications})</div>
                                     </div>
                                     <div style={{ "height": "40vh" }}>
-                                        <AMPie data={data} />
+                                        <AMPieDynamic data={data} />
                                     </div>
 
                                 </div>
@@ -219,11 +238,11 @@ function Pool({params}) {
                         </div>
                     </div>
                 </div>
-                <Recipientlist poolData={pool}/>
+                <Recipientlist poolData={pool} />
             </div>
         </div>
 
     )
 }
 
-export default Pool
+export default PoolDe

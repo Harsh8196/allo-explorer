@@ -30,7 +30,17 @@ export default function Poolpagefilter() {
     useEffect(() => {
         // console.log("Node", selectedNode)
         if (selectedNode !== "") {
-            getPoolDetails()
+            fetch(`/api/pool`, {
+                method: "POST",
+                body: JSON.stringify({ "chainId": chainId.toString(), "poolId": selectedNode.toString() })
+            })
+                .then((res) => res.json())
+                .then((result) => {
+                    setPoolDeatils(result.poolDetails)
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            // getPoolDetails()
             NodeOptions()
         }
 
@@ -57,15 +67,15 @@ export default function Poolpagefilter() {
 
     }
 
-    const getPoolDetails = async function () {
-        const response = await fetch(`${window.location.origin}/api/pool`, {
-            method: "POST",
-            body: JSON.stringify({ "chainId": chainId.toString(), "poolId": selectedNode.toString() })
-        })
-        const result = await response.json()
-        setPoolDeatils(result.poolDetails)
-        // console.log("pool details",result.poolDetails)
-    }
+    // const getPoolDetails = async function () {
+    //     const response = await fetch(`${window.location.origin}/api/pool`, {
+    //         method: "POST",
+    //         body: JSON.stringify({ "chainId": chainId.toString(), "poolId": selectedNode.toString() })
+    //     })
+    //     const result = await response.json()
+    //     setPoolDeatils(result.poolDetails)
+    //     // console.log("pool details",result.poolDetails)
+    // }
 
     return (
         <div hidden={!isLoading}>

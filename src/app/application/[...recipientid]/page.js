@@ -3,7 +3,6 @@ import { rApplication, rapplicationDetails, rApplicationId, rpoolId } from "@/co
 import { useRecoilState, useRecoilValue } from "recoil"
 import { useEffect, useState } from "react"
 import { Loading } from "@/component/Loading"
-import AMPie from "@/component/pie/AMPie"
 import ApplicationSideCardDetails from "@/component/application/ApplicationSideCardDetails"
 import { ApplicationDetailsFull, ApplicationDetails } from "@/component/application/ApplicationDetails"
 import { risLoading } from "@/component/chain/state"
@@ -61,6 +60,8 @@ function RecipientDetails({ params }) {
         }
     }, [application])
 
+    const AMPieDynamic = dynamic(() => import("../../../component/pie/AMPie"), { ssr: false })
+
     return (
         <div>
             <Loading />
@@ -82,7 +83,7 @@ function RecipientDetails({ params }) {
                                     <div className="row">
                                         <div className="col-lg-8 col-md-11 col-sm-11 col-11">
                                             <div style={{ "height": "40vh" }}>
-                                                <AMPie data={pieData}/>
+                                                <AMPieDynamic data={pieData}/>
                                             </div>
                                         </div>
                                         <div className="col-lg-3 col-md-11 col-sm-11 col-11">

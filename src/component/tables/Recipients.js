@@ -8,7 +8,23 @@ export default function Recipientlist({ poolData }) {
 
     useEffect(() => {
         if (poolData.nodes.length > 0) {
-            getMetaData()
+            let metaData = {}
+        for (const ms of poolData.nodes[0].microGrantRecipients) {
+            if (ms.metadataPointer !== null) {
+                fetch(`https://ipfs.io/ipfs/${ms.metadataPointer}`)
+                .then(res=>res.json())
+                .then(result => {
+                    metaData[ms.recipientId] = result.name
+                }).catch(err=>{
+                    metaData[ms.recipientId] = ""
+                })
+            } else {
+                metaData[ms.recipientId] = ""
+            }
+
+        }
+
+        setMeataData(metaData)
         }
 
     }, [poolData])

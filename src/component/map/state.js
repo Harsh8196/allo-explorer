@@ -48,7 +48,7 @@ export const rApplication = atom({
 
 export const rpoolDetails = selector({
   key: 'rpoolDetails',
-  get: async ({ get }) => {
+  get: ({ get }) => {
     const poolDetails = get(apipoolDetails)
     if (poolDetails.length > 0) {
       let poolNodes = []
@@ -176,7 +176,7 @@ export const rpoolDetails = selector({
 
 export const rpoolDetailsPool = selector({
   key: 'rpoolDetailsPool',
-  get: async ({ get }) => {
+  get: ({ get }) => {
     const poolDetails = get(apipoolPageDetails)
 
     if (poolDetails.length > 0) {

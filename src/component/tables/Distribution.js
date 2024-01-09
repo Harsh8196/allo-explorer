@@ -14,8 +14,20 @@ export default function Distributionlist({ applicationData }) {
 
     useEffect(() => {
         if (applicationData.distributed.length > 0) {
+            if (applicationData.distributed[0].poolMetadataPointer !== null) {
+                fetch(`https://ipfs.io/ipfs/${applicationData.distributed[0].poolMetadataPointer}`)
+                .then(res=>res.json())
+                .then(result=>{
+                    setName(result.name)
+                })
+                .catch(err=>{
+                    setName("")
+                })
 
-            getMetaData()
+            } else {
+                setName("")
+            }
+           
             setIsDataAvailable(false)
         } else {
             setIsDataAvailable(true)
@@ -23,19 +35,19 @@ export default function Distributionlist({ applicationData }) {
 
     }, [applicationData])
 
-    const getMetaData = async () => {
-        if (applicationData.distributed[0].poolMetadataPointer !== null) {
-            try {
-                const response = await fetch(`https://ipfs.io/ipfs/${applicationData.distributed[0].poolMetadataPointer}`)
-                const result = await response.json()
-                setName(result.name)
-            } catch (error) {
-                setName("")
-            }
-        } else {
-            setName("")
-        }
-    }
+    // const getMetaData = async () => {
+    //     if (applicationData.distributed[0].poolMetadataPointer !== null) {
+    //         try {
+    //             const response = await fetch(`https://ipfs.io/ipfs/${applicationData.distributed[0].poolMetadataPointer}`)
+    //             const result = await response.json()
+    //             setName(result.name)
+    //         } catch (error) {
+    //             setName("")
+    //         }
+    //     } else {
+    //         setName("")
+    //     }
+    // }
 
     const Rows = () => {
         return (

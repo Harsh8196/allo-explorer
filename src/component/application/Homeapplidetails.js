@@ -7,22 +7,29 @@ export default function Homeapplicationdetails({applicationDetails}) {
     const [distibutedAmount,setDistibutedAmount] = useState('')
 
     useEffect(()=>{
-        getMetaData()
+        fetch(`https://ipfs.io/ipfs/${applicationDetails.metadataPointer}`)
+        .then(res=>res.json())
+        .then(result=>{
+            setApplicationName(result.name)  
+        }).catch(err=>{
+            setApplicationName("")
+        })
+        // getMetaData()
         setURL(`${window.location.origin}/application/${applicationDetails.applicationId}`)
         setRequestedAmount(`${applicationDetails.totalRequestedAmount} ${applicationDetails.tokenSymbol}`)
         setDistibutedAmount(`${applicationDetails.totalDistributedAmount} ${applicationDetails.tokenSymbol}`)
     },[applicationDetails])
 
-    const getMetaData = async() => {
-        try {
-                const response = await fetch(`https://ipfs.io/ipfs/${applicationDetails.metadataPointer}`)
-                const result = await response.json()
-                setApplicationName(result.name)
-                // console.log('result',result)
-              } catch (error) {
-                setApplicationName("")
-              }
-    }
+    // const getMetaData = async() => {
+    //     try {
+    //             const response = await fetch(`https://ipfs.io/ipfs/${applicationDetails.metadataPointer}`)
+    //             const result = await response.json()
+    //             setApplicationName(result.name)
+    //             // console.log('result',result)
+    //           } catch (error) {
+    //             setApplicationName("")
+    //           }
+    // }
     return(
         <div className="card shadow mb-5 rounded">
                 <div className="card-header text-start">

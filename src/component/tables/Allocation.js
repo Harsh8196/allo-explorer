@@ -9,42 +9,52 @@ const Networks = getNetworks()
 export default function Allocationlist({ applicationData }) {
 
     const [name, setName] = useState('')
-    const [isDataAvailable,setIsDataAvailable] = useState(true)
+    const [isDataAvailable, setIsDataAvailable] = useState(true)
     const chainId = useRecoilValue(rchainId)
 
     useEffect(() => {
         if (applicationData.allocated.length > 0) {
-            
-            getMetaData()
+            if (applicationData.allocated[0].poolMetadataPointer !== null) {
+                fetch(`https://ipfs.io/ipfs/${applicationData.allocated[0].poolMetadataPointer}`)
+                    .then(res => res.json())
+                    .then(result => {
+                        setName(result.name)
+                    })
+                    .catch(err => {
+                        setName("")
+                    })
+            } else {
+                setName("")
+            }
             setIsDataAvailable(false)
-        }else{
+        } else {
             setIsDataAvailable(true)
         }
 
     }, [applicationData])
 
-    const getMetaData = async () => {
-        if (applicationData.allocated[0].poolMetadataPointer !== null) {
-            try {
-                const response = await fetch(`https://ipfs.io/ipfs/${applicationData.allocated[0].poolMetadataPointer}`)
-                const result = await response.json()
-                setName(result.name)
-            } catch (error) {
-                setName("")
-            }
-        } else {
-            setName("")
-        }
-    }
+    // const getMetaData = async () => {
+    //     if (applicationData.allocated[0].poolMetadataPointer !== null) {
+    //         try {
+    //             const response = await fetch(`https://ipfs.io/ipfs/${applicationData.allocated[0].poolMetadataPointer}`)
+    //             const result = await response.json()
+    //             setName(result.name)
+    //         } catch (error) {
+    //             setName("")
+    //         }
+    //     } else {
+    //         setName("")
+    //     }
+    // }
 
     const Rows = () => {
         return (
-            applicationData.allocated.map((al,index) => {
+            applicationData.allocated.map((al, index) => {
                 const getExplorerURL = Networks[chainId].explorer
-                const txURL = getExplorerURL+'tx/'+al.transactionHash
-                const rsIdURL = getExplorerURL +'address/'+al.recipientId
-                const rsSender = getExplorerURL+'address/'+al.sender
-                const contractAddress = getExplorerURL+'address/'+al.contractAddress
+                const txURL = getExplorerURL + 'tx/' + al.transactionHash
+                const rsIdURL = getExplorerURL + 'address/' + al.recipientId
+                const rsSender = getExplorerURL + 'address/' + al.sender
+                const contractAddress = getExplorerURL + 'address/' + al.contractAddress
                 return (
                     <tr key={index}>
                         <td><a href={txURL} className="text-decoration-none d-inline-block text-truncate a-rs-id">{al.transactionHash}</a></td>
@@ -83,7 +93,7 @@ export default function Allocationlist({ applicationData }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <Rows/>
+                                <Rows />
                             </tbody>
                         </table>
                     </div>

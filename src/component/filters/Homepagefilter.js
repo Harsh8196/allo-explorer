@@ -98,7 +98,7 @@ function Homepagefilter() {
         }
     }
 
-    const onNodeSelection = async (e) => {
+    const onNodeSelection = (e) => {
         // console.log(e.target.value)
         setSelectedNode(e.target.value)
 

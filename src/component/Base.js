@@ -15,19 +15,30 @@ function Base() {
     const [isLoading,setIsLoading] = useRecoilState(risLoading)
 
     useEffect(()=>{
-        getPoolDetails(chainId)
+        fetch('/api/pool',{
+            method:"POST",
+            body:JSON.stringify({"chainId":chainId.toString(),"poolId":""})
+        })
+        .then((res)=>res.json())
+        .then((result)=>{
+            setPoolDeatils(result.poolDetails)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+        // getPoolDetails(chainId)
     },[chainId])
 
-    const getPoolDetails = async function(chainId){
-        setIsLoading(false)
-        const response = await fetch(`${window.location.origin}/api/pool`,{
-                            method:"POST",
-                            body:JSON.stringify({"chainId":chainId.toString(),"poolId":""})
-                        })
-        const result = await response.json()
-        setPoolDeatils(result.poolDetails)
-        // console.log("pool details",result.poolDetails)
-    }
+    // const getPoolDetails = async function(chainId){
+    //     setIsLoading(false)
+    //     const response = await fetch(`${window.location.origin}/api/pool`,{
+    //                         method:"POST",
+    //                         body:JSON.stringify({"chainId":chainId.toString(),"poolId":""})
+    //                     })
+    //     const result = await response.json()
+    //     setPoolDeatils(result.poolDetails)
+    //     // console.log("pool details",result.poolDetails)
+    // }
 
     const onChainSelection = async (e)=>{
         // console.log(e.target.value)

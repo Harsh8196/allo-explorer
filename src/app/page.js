@@ -14,7 +14,7 @@ export default function Home() {
   const [pool, setPool] = useRecoilState(rpool)
   const poolDetails = useRecoilValue(rpoolDetails)
   const [isLoading, setIsLoading] = useRecoilState(risLoading)
-
+  
   useEffect(() => {
       setPool(poolDetails)
   }, [poolDetails])
@@ -40,7 +40,7 @@ export default function Home() {
           <div className="col-11 col-lg-9 col-md-12 col-sm-11">
             <div className="row m-1 mt-1 border border-1 rounded" style={{ "height": "88vh", "position": "relative" }}>
               <ThemeContext.Consumer>
-                {({ stitchesTheme }) => <AMForceGraphDynamic stitchesTheme={stitchesTheme} />}
+                {({ stitchesTheme }) => <AMForceGraphDynamic stitchesTheme={stitchesTheme} poolDetails={pool} />}
               </ThemeContext.Consumer>
             </div>
           </div>

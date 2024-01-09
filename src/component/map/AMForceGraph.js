@@ -18,9 +18,9 @@ const MIN_ZOOM = 3;
 
 const NODE_R = 5;
 
-function AMForceGraph({stitchesTheme}){
+function AMForceGraph({stitchesTheme,poolDetails}){
 
-    const poolDetails = useRecoilValue(rpool)
+    // const poolDetails = useRecoilValue(rpool)
 
     const fgRef = useRef();
  

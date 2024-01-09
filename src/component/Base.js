@@ -15,6 +15,7 @@ function Base() {
     const [isLoading,setIsLoading] = useRecoilState(risLoading)
 
     useEffect(()=>{
+        setIsLoading(false)
         fetch('/api/pool',{
             method:"POST",
             body:JSON.stringify({"chainId":chainId.toString(),"poolId":""})
@@ -40,7 +41,7 @@ function Base() {
     //     // console.log("pool details",result.poolDetails)
     // }
 
-    const onChainSelection = async (e)=>{
+    const onChainSelection = (e)=>{
         // console.log(e.target.value)
         SetChainId(e.target.value)
         //await getPoolDetails(e.target.value)

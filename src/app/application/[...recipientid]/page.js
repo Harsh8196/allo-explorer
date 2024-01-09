@@ -3,6 +3,7 @@ import { rApplication, rapplicationDetails, rApplicationId, rpoolId } from "@/co
 import { useRecoilState, useRecoilValue } from "recoil"
 import { useEffect, useState } from "react"
 import { Loading } from "@/component/Loading"
+import dynamic from "next/dynamic"
 import ApplicationSideCardDetails from "@/component/application/ApplicationSideCardDetails"
 import { ApplicationDetailsFull, ApplicationDetails } from "@/component/application/ApplicationDetails"
 import { risLoading } from "@/component/chain/state"
